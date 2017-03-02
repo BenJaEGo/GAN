@@ -17,7 +17,7 @@ class Generator(object):
             if layer_idx is 0:
                 n_layer_input = n_input
             else:
-                n_layer_input = n_units[layer_idx]
+                n_layer_input = n_units[layer_idx - 1]
             n_unit = n_units[layer_idx]
             self._hidden_layers.append(
                 AffinePlusNonlinearLayer(layer_name, n_layer_input, n_unit, hidden_activation))

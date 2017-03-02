@@ -19,15 +19,11 @@ class GenerativeAdversarialNetwork(object):
         self._discriminator = Discriminator(n_input, n_discriminator_units, 1, tf.nn.tanh, tf.nn.sigmoid)
 
         self._generated_sample = self._generator.forward(self._z_pl)
-        # fake_probability, fake_logit = self._discriminator.forward(self._generated_sample)
-        # real_probability, real_logit = self._discriminator.forward(self._x_pl)
+
         fake_probability = self._discriminator.forward(self._generated_sample)
         real_probability = self._discriminator.forward(self._x_pl)
-
         discriminator_loss = -tf.reduce_mean(tf.log(real_probability) + tf.log(1.0 - fake_probability))
         generator_loss = -tf.reduce_mean(tf.log(fake_probability))
-        # self._discriminator_loss = -tf.reduce_mean(tf.log(real_probability) + tf.log(1.0 - fake_probability))
-        # self._generator_loss = -tf.reduce_mean(tf.log(fake_probability))
 
         self._discriminator_optimizer = tf.train.AdamOptimizer(learning_rate=self._dis_lr, name="ADAM_optimizer_dis")
         self._generator_optimizer = tf.train.AdamOptimizer(learning_rate=self._gen_lr, name="ADAM_optimizer_gen")
@@ -55,15 +51,6 @@ class GenerativeAdversarialNetwork(object):
             grads_and_vars=zip(gen_grads, gen_trainable_variables),
             global_step=gen_global_step,
             name="gen_train_op")
-
-        # print(self._discriminator.parameters)
-        # print(self._generator.parameters)
-
-        # self._dis_train_op = tf.train.AdamOptimizer().minimize(self._discriminator_loss,
-        #                                                        var_list=self._discriminator.parameters)
-        #
-        # self._gen_train_op = tf.train.AdamOptimizer().minimize(self._generator_loss,
-        #                                                        var_list=self._generator.parameters)
 
     @property
     def x_pl(self):
